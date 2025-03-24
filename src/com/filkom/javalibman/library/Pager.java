@@ -9,6 +9,7 @@ public class Pager {
     private char verticalBar;
     private char edge;
     private String inputStyle;
+    private String inputSeparator;
     private Scanner scanner;
 
     public Pager() {
@@ -18,17 +19,19 @@ public class Pager {
         this.verticalBar = '|';
         this.edge = '+';
         this.inputStyle = "$";
+        this.inputSeparator = ":";
         this.scanner = new Scanner(System.in);
     }
 
     public Pager(int pageWidth, int defaultSpaceBefore, char horizontalBar, char verticalBar, char edge,
-            String inputStyle) {
+            String inputStyle, String inputSeparator) {
         this.pageWidth = pageWidth;
         this.defaultSpaceBefore = defaultSpaceBefore;
         this.horizontalBar = horizontalBar;
         this.verticalBar = verticalBar;
         this.edge = edge;
         this.inputStyle = inputStyle;
+        this.inputSeparator = inputSeparator;
         this.scanner = new Scanner(System.in);
     }
 
@@ -46,6 +49,7 @@ public class Pager {
 
     private void printMessage(String message, int spaceBefore) {
         int spaceAfter = pageWidth - spaceBefore - message.length();
+
         beginLine();
         for (int i = 0; i < spaceBefore; i++) {
             System.out.print(" ");
@@ -63,6 +67,16 @@ public class Pager {
             System.out.print(" ");
         }
         System.out.print(this.inputStyle + " ");
+        return scanner.nextLine();
+    }
+
+    private String customGetInput(String inputStyle, int spaceBefore) {
+        beginLine();
+        for (int i = 0; i < spaceBefore; i++) {
+            System.out.print(" ");
+        }
+
+        System.out.print(inputStyle + " ");
         return scanner.nextLine();
     }
 
@@ -106,6 +120,41 @@ public class Pager {
         System.out.println(this.edge);
     }
 
+    public void header(String message) {
+        emptySpace();
+        horizontalSeparator();
+        spacer();
+        messageCenter(message);
+        spacer();
+        horizontalSeparator();
+        spacer();
+    }
+
+    public void footer() {
+        spacer();
+        horizontalSeparator();
+        emptySpace();
+    }
+
+    public void messageCenter(String message) {
+        int size = this.pageWidth - message.length();
+
+        beginLine();
+        for (int i = 0; i < size / 2; i++) {
+            System.out.print(" ");
+        }
+        System.out.print(message);
+        for (int i = 0; i < size / 2; i++) {
+            System.out.print(" ");
+        }
+        if (this.pageWidth % 2 == 0 && message.length() % 2 != 0) {
+            System.out.print(" ");
+        } else if (message.length() % 2 == 0) {
+            System.out.print(" ");
+        }
+        endLine();
+    }
+
     public void spacer() {
         printSpace();
     }
@@ -126,38 +175,6 @@ public class Pager {
         }
     }
 
-    public void header(String message) {
-        emptySpace();
-        horizontalSeparator();
-        spacer();
-        messageCenter(message);
-        spacer();
-        horizontalSeparator();
-        spacer();
-    }
-
-    public void footer() {
-        spacer();
-        horizontalSeparator();
-        emptySpace();
-    }
-
-    public void messageCenter(String message) {
-        int size = this.pageWidth - message.length();
-        beginLine();
-        for (int i = 0; i < size / 2; i++) {
-            System.out.print(" ");
-        }
-        System.out.print(message);
-        for (int i = 0; i < size / 2; i++) {
-            System.out.print(" ");
-        }
-        if (message.length() % 2 != 0) {
-            System.out.print(" ");
-        }
-        endLine();
-    }
-
     public void message(String message) {
         printMessage(message, this.defaultSpaceBefore);
     }
@@ -175,11 +192,17 @@ public class Pager {
     }
 
     public String customInput(String inputStyle, int spaceBefore) {
-        beginLine();
-        for (int i = 0; i < spaceBefore; i++) {
-            System.out.print(" ");
+        return customGetInput(inputStyle, spaceBefore);
+    }
+
+    public String customInput(String inputStyle, boolean inputSeparator) {
+        if (inputSeparator) {
+            return customGetInput(inputStyle.concat(this.inputSeparator), this.defaultSpaceBefore);
         }
-        System.out.print(inputStyle + " ");
-        return scanner.nextLine();
+        return customGetInput(inputStyle, this.defaultSpaceBefore);
+    }
+
+    public String customInput(String inputStyle) {
+        return customGetInput(inputStyle, this.defaultSpaceBefore);
     }
 }
