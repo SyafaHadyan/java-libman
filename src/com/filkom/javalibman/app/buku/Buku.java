@@ -5,6 +5,8 @@ import java.net.MalformedURLException;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import library.Pager;
+
 public class Buku {
     private String judul;
     private String penulis;
@@ -14,6 +16,8 @@ public class Buku {
     private UUID IDBuku;
     private URL coverBuku;
     private LocalDate tanggalTerbit;
+
+    static Pager pager = new Pager();
 
     public Buku() throws MalformedURLException {
         this.judul = "Operating System Concepts, 10th Edition";
@@ -34,6 +38,46 @@ public class Buku {
         this.status = true;
         this.IDBuku = UUID.randomUUID();
         this.coverBuku = coverBuku;
+        this.tanggalTerbit = tanggalTerbit;
+    }
+
+    private static void parseInfoBukuToPager(Buku buku, int count) {
+        pager.info(new String[] { "Buku ke-" + count++, "", "Judul: " + buku.getJudul(),
+                "Penulis: " + buku.getPenulis(), "Username Peminjam: " + buku.getUsernamePeminjam(),
+                "Nama Peminjam: " + buku.getNamaPeminjam(), "Tersedia: " + buku.getStatus(),
+                "ID Buku: " + buku.getIDBuku(), "Cover Buku: " + buku.getCoverBuku(),
+                "Tanggal Terbit: " + buku.getTanggalTerbit() });
+    }
+
+    public void setJudul(String judul) {
+        this.judul = judul;
+    }
+
+    public void setPenulis(String penulis) {
+        this.penulis = penulis;
+    }
+
+    public void setUsernamePeminjam(String usernamePeminjam) {
+        this.usernamePeminjam = usernamePeminjam;
+    }
+
+    public void setNamaPeminjam(String namaPeminjam) {
+        this.namaPeminjam = namaPeminjam;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
+    public void setIDBuku(UUID IDBuku) {
+        this.IDBuku = IDBuku;
+    }
+
+    public void setCoverBuku(URL coverBuku) {
+        this.coverBuku = coverBuku;
+    }
+
+    public void setTanggalTerbit(LocalDate tanggalTerbit) {
         this.tanggalTerbit = tanggalTerbit;
     }
 
@@ -69,19 +113,11 @@ public class Buku {
         return this.tanggalTerbit;
     }
 
-    public void pinjamBuku(String usernamePeminjam, String namaPeminjam) {
-        if (this.status) {
-            this.usernamePeminjam = usernamePeminjam;
-            this.namaPeminjam = namaPeminjam;
-            this.status = false;
-        }
+    public static void displayInfoBuku(Buku buku, int count) {
+        parseInfoBukuToPager(buku, count);
     }
 
-    public void kembaliBuku() {
-        if (!this.status) {
-            this.usernamePeminjam = null;
-            this.namaPeminjam = null;
-            this.status = true;
-        }
+    public static void displayInfoBuku(Buku buku) {
+        parseInfoBukuToPager(buku, 0);
     }
 }

@@ -107,8 +107,6 @@ public class Perpustakaan {
             }
         } catch (BukuTidakDitemukanException e) {
             pager.info(e.getMessage());
-        } catch (BukuTidakDipinjamException f) {
-            pager.info(f.getMessage());
         }
     }
 
@@ -134,7 +132,5 @@ public class Perpustakaan {
         } catch (BukuTidakDitemukanException e) {
             pager.info(e.getMessage());
         }
-
-        return null;
     }
 }

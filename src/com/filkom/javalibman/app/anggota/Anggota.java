@@ -7,10 +7,11 @@ import library.Pager;
 import app.perpustakaan.Perpustakaan;
 
 public class Anggota {
-    Pager pager = new Pager();
     private String nama;
     private String username;
     private String password;
+
+    Pager pager = new Pager();
 
     public boolean register(String nama, String username, String password) {
         if (Perpustakaan.cekAnggota(username)) {
@@ -38,6 +39,14 @@ public class Anggota {
             this.password = "";
             return false;
         }
+    }
+
+    public static void pinjamBuku(String username, UUID IDBuku) {
+        Perpustakaan.pinjamBuku(username, IDBuku);
+    }
+
+    public static void kembaliBuku(String username, UUID IDBuku) {
+        Perpustakaan.kembaliBuku(username, IDBuku);
     }
 
     public String getNama() {

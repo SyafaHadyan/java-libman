@@ -20,16 +20,14 @@ public class AppRun {
         Pager pager = new Pager();
         Anggota anggota = new Anggota();
         Perpustakaan perpustakaan = new Perpustakaan();
-        String nama = "";
         String username = "";
-        String password = "";
         boolean loggedIn = false;
 
         while (true) {
             loggedIn = !username.isEmpty();
             pager.header("Java libMan " + VERSION);
 
-            if (loggedIn) {
+            if (!loggedIn) {
                 pager.message("Anda belum login");
             } else {
                 pager.message("Anda login sebagai: " + username);
@@ -42,16 +40,18 @@ public class AppRun {
             }
 
             pager.message("(2) Pinjam Buku");
-            pager.message("(3) Tambah Buku");
-            pager.message("(4) Lihat Daftar Buku");
-            pager.message("(5) Lihat Info Buku");
+            pager.message("(3) Kembalikan Buku");
+            pager.message("(4) Tambah Buku");
+            pager.message("(5) Lihat Daftar Buku");
+            pager.message("(6) Lihat Info Buku");
+            pager.message("(7) Cari Buku");
 
             if (loggedIn) {
-                pager.message("(6) Lihat Info User");
-                pager.message("(7) Log Out");
+                pager.message("(8) Lihat Info User");
+                pager.message("(9) Log Out");
             }
 
-            pager.message("(8) Keluar");
+            pager.message("(10) Keluar");
             pager.spacer();
             String userInputOption = pager.input();
             pager.footer();
@@ -64,9 +64,7 @@ public class AppRun {
                 perpustakaan.tambahAnggota(anggota);
                 pager.footer();
 
-                nama = anggota.getNama();
                 username = anggota.getUsername();
-                password = anggota.getPassword();
 
                 if (!registerConfirm) {
                     pager.info("silahkan gunakan username lain");
@@ -77,16 +75,17 @@ public class AppRun {
                         pager.customInput("Password", true));
                 pager.footer();
 
-                nama = anggota.getNama();
                 username = anggota.getUsername();
-                password = anggota.getPassword();
 
                 if (!loginConfirm) {
                     pager.info("username atau password salah");
                 }
             } else if (userInputOption.equals("2")) {
-                //
+                pager.header("Pinjam Buku");
+                Anggota.pinjamBuku(username, UUID.fromString(pager.customInput("ID Buku", true)));
             } else if (userInputOption.equals("3")) {
+                Anggota.kembaliBuku(username, UUID.fromString(pager.customInput("ID Buku", true)));
+            } else if (userInputOption.equals("4")) {
                 pager.header("Tambah Buku");
 
                 String judul = pager.customInput("Judul", true);
@@ -124,20 +123,24 @@ public class AppRun {
 
                 perpustakaan.tambahBuku(new Buku(judul, penulis, coverBuku, tanggalTerbit));
                 pager.footer();
-            } else if (userInputOption.equals("4")) {
+            } else if (userInputOption.equals("5")) {
                 perpustakaan.daftarBuku();
-            } else if (loggedIn && userInputOption.equals("6")) {
+            } else if (userInputOption.equals("6")) {
+                pager.header("Info Buku");
+                Buku buku = perpustakaan.infoBuku(UUID.fromString(pager.customInput("ID Buku", true)));
+                pager.footer();
+            } else if (userInputOption.equals("7")) {
+                // TODO: Cari Buku
+            } else if (loggedIn && userInputOption.equals("8")) {
                 pager.info(new String[] { "Nama: " + anggota.getNama(), "Username: " + anggota.getUsername(),
                         "Password: " + anggota.getPassword() });
-            } else if (loggedIn && userInputOption.equals("7")) {
-                nama = "";
+            } else if (loggedIn && userInputOption.equals("9")) {
                 username = "";
-                password = "";
 
                 pager.header("Info");
                 pager.message("Anda telah log out");
                 pager.footer();
-            } else if (userInputOption.equals("8")) {
+            } else if (userInputOption.equals("10")) {
                 break;
             } else {
                 pager.info("invalid input");

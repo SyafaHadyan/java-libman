@@ -160,6 +160,7 @@ public class Pager {
         for (String i : message) {
             message(i);
         }
+        spacer();
         message("Press any key to continue");
         spacer();
         input();
