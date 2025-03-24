@@ -8,23 +8,13 @@ import app.anggota.Anggota;
 import app.perpustakaan.Perpustakaan;
 
 public class AppRun {
-    static Pager pager = new Pager();
-
-    private static void invalidInput() {
-        pager.header("Info");
-        pager.message("Invalid Input");
-        pager.message("Press any key to continue");
-        pager.spacer();
-        pager.input();
-        pager.footer();
-    }
 
     public static void main(String[] args) throws MalformedURLException {
         Scanner scanner = new Scanner(System.in);
+        Pager pager = new Pager();
         Buku buku = new Buku();
         Anggota anggota = new Anggota();
         Perpustakaan perpustakaan = new Perpustakaan();
-        UUID IDAnggota;
         String nama = "";
         String username = "";
         String password = "";
@@ -58,20 +48,25 @@ public class AppRun {
                 perpustakaan.tambahAnggota(anggota);
                 pager.footer();
 
-                IDAnggota = anggota.getIDAnggota();
                 nama = anggota.getNama();
                 username = anggota.getUsername();
                 password = anggota.getPassword();
+
+                if (username.isEmpty()) {
+                    pager.info("silahkan gunakan username lain");
+                }
             } else if (userInputOption.equals("1")) {
                 pager.header("Login");
-                anggota.login(pager.customInput("Nama", true), pager.customInput("Username", true),
-                        pager.customInput("Password", true));
+                anggota.login(pager.customInput("Username", true), pager.customInput("Password", true));
                 pager.footer();
 
-                IDAnggota = anggota.getIDAnggota();
                 nama = anggota.getNama();
                 username = anggota.getUsername();
                 password = anggota.getPassword();
+
+                if (username.isEmpty()) {
+                    pager.info("username atau password salah");
+                }
             } else if (userInputOption.equals("2")) {
                 //
             } else if (userInputOption.equals("3")) {
@@ -81,7 +76,6 @@ public class AppRun {
             } else if (userInputOption.equals("5")) {
                 //
             } else if (userInputOption.equals("6")) {
-                IDAnggota = null;
                 nama = "";
                 username = "";
                 password = "";
@@ -92,7 +86,7 @@ public class AppRun {
             } else if (userInputOption.equals("7")) {
                 break;
             } else {
-                invalidInput();
+                pager.info("invalid input");
             }
         }
 
