@@ -5,24 +5,34 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import library.Pager;
 import app.buku.Buku;
 import app.anggota.Anggota;
 
 public class Perpustakaan {
-    private ArrayList<String> daftarBuku;
-    static private HashMap<String, ArrayList<String>> daftarAnggota;
-
-    public Perpustakaan() {
-        this.daftarBuku = new ArrayList<>();
-        daftarAnggota = new HashMap<>();
-    }
-
-    public Perpustakaan(ArrayList<String> daftarBuku) {
-        this.daftarBuku = daftarBuku;
-    }
+    static private ArrayList<Buku> daftarBuku = new ArrayList<>();
+    static private HashMap<String, ArrayList<String>> daftarAnggota = new HashMap<>();
+    Pager pager = new Pager();
 
     public void tambahBuku(Buku buku) {
-        //
+        daftarBuku.add(buku);
+    }
+
+    public void daftarBuku() {
+        pager.info(String.valueOf("Total Jumlah Buku: " + daftarBuku.size()));
+
+        if (daftarBuku.isEmpty()) {
+            pager.info("Perpustakaan masih belum memiliki buku");
+        } else {
+            int count = 1;
+            for (Buku i : daftarBuku) {
+                pager.info(new String[] { "Buku ke-" + count++, "", "Judul: " + i.getJudul(),
+                        "Penulis: " + i.getPenulis(), "Username Peminjam: " + i.getUsernamePeminjam(),
+                        "Nama Peminjam: " + i.getNamaPeminjam(), "Tersedia: " + i.getStatus(),
+                        "ID Buku: " + i.getIDBuku(), "Cover Buku: " + i.getCoverBuku(),
+                        "Tanggal Terbit: " + i.getTanggalTerbit(), "" });
+            }
+        }
     }
 
     public void tambahAnggota(Anggota anggota) {

@@ -149,10 +149,21 @@ public class Pager {
         }
         if (this.pageWidth % 2 == 0 && message.length() % 2 != 0) {
             System.out.print(" ");
-        } else if (message.length() % 2 == 0) {
+        } else if (this.pageWidth % 2 != 0 && message.length() % 2 == 0) {
             System.out.print(" ");
         }
         endLine();
+    }
+
+    public void info(String... message) {
+        header("Info");
+        for (String i : message) {
+            message(i);
+        }
+        message("Press any key to continue");
+        spacer();
+        input();
+        footer();
     }
 
     public void spacer() {

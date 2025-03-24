@@ -7,31 +7,36 @@ import library.Pager;
 import app.perpustakaan.Perpustakaan;
 
 public class Anggota {
+    Pager pager = new Pager();
     private String nama;
     private String username;
     private String password;
 
-    public void register(String nama, String username, String password) {
+    public boolean register(String nama, String username, String password) {
         if (Perpustakaan.cekAnggota(username)) {
             this.nama = "";
             this.username = "";
             this.password = "";
+            return false;
         } else {
             this.nama = nama;
             this.username = username;
             this.password = password;
+            return true;
         }
     }
 
-    public void login(String username, String password) {
+    public boolean login(String username, String password) {
         if (Perpustakaan.cekAnggota(username) && Perpustakaan.cekPassword(username, password)) {
             this.nama = "";
             this.username = username;
             this.password = password;
+            return true;
         } else {
             this.nama = "";
             this.username = "";
             this.password = "";
+            return false;
         }
     }
 
