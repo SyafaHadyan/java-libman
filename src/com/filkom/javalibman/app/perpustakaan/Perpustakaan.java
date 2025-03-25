@@ -46,7 +46,7 @@ public class Perpustakaan {
     }
 
     public static boolean cekPassword(String username, String password) {
-        return daftarAnggota.get(username).get(0).equals(password);
+        return daftarAnggota.get(username).get(1).equals(password);
     }
 
     public static void pinjamBuku(String usernameAnggota, UUID IDBuku) {
@@ -55,7 +55,6 @@ public class Perpustakaan {
         }
 
         int index = 0;
-        boolean found = false;
         try {
             for (Buku i : daftarBuku) {
                 if (i.getIDBuku().equals(IDBuku)) {
@@ -68,11 +67,8 @@ public class Perpustakaan {
                     return;
                 }
                 index++;
-
-                if (!found) {
-                    throw new BukuTidakDitemukanException("Buku dengan ID " + IDBuku + " tidak ditemukan");
-                }
             }
+            throw new BukuTidakDitemukanException("Buku dengan ID " + IDBuku + " tidak ditemukan");
         } catch (BukuTidakTersediaException e) {
             pager.info(e.getMessage());
         } catch (BukuTidakDitemukanException f) {
@@ -86,8 +82,6 @@ public class Perpustakaan {
         }
 
         int index = 0;
-        boolean found = false;
-
         try {
             for (Buku i : daftarBuku) {
                 if (i.getIDBuku().equals(IDBuku)) {
@@ -100,11 +94,8 @@ public class Perpustakaan {
                     return;
                 }
                 index++;
-
-                if (!found) {
-                    throw new BukuTidakDitemukanException("Buku dengan ID " + IDBuku + " tidak ditemukan");
-                }
             }
+            throw new BukuTidakDitemukanException("Buku dengan ID " + IDBuku + " tidak ditemukan");
         } catch (BukuTidakDitemukanException e) {
             pager.info(e.getMessage());
         } catch (BukuTidakDipinjamException f) {
@@ -118,23 +109,81 @@ public class Perpustakaan {
             return null;
         }
 
-        int index = 0;
-        boolean found = false;
         try {
             for (Buku i : daftarBuku) {
                 if (i.getIDBuku().equals(IDBuku)) {
                     return i;
                 }
-                index++;
-
-                if (!found) {
-                    throw new BukuTidakDitemukanException("Buku dengan ID " + IDBuku + " tidak ditemukan");
-                }
             }
+            throw new BukuTidakDitemukanException("Buku dengan ID " + IDBuku + " tidak ditemukan");
         } catch (BukuTidakDitemukanException e) {
             pager.info(e.getMessage());
         }
-
         return null;
+    }
+
+    public static Buku cariIDBuku(UUID IDBuku) {
+        if (daftarBuku.isEmpty()) {
+            pager.info("Perpustakaan masih belum memiliki buku");
+            return null;
+        }
+
+        try {
+            for (Buku i : daftarBuku) {
+                if (i.getIDBuku().equals(IDBuku)) {
+                    return i;
+                }
+            }
+            throw new BukuTidakDitemukanException("Buku dengan ID " + IDBuku + " tidak ditemukan");
+        } catch (BukuTidakDitemukanException e) {
+            pager.info(e.getMessage());
+        }
+        return null;
+    }
+
+    public static ArrayList<Buku> cariJudulBuku(String judulBuku) {
+        if (daftarBuku.isEmpty()) {
+            pager.info("Perpustakaan masih belum memiliki buku");
+            return null;
+        }
+
+        ArrayList<Buku> result = new ArrayList<>();
+        try {
+            for (Buku i : daftarBuku) {
+                if (i.getJudul().toLowerCase().contains(judulBuku.toLowerCase())) {
+                    result.add(i);
+                }
+            }
+            if (result.size() == 0) {
+                throw new BukuTidakDitemukanException("Buku dengan judul " + judulBuku + " tidak ditemukan");
+            }
+        } catch (BukuTidakDitemukanException e) {
+            pager.info(e.getMessage());
+            return null;
+        }
+        return result;
+    }
+
+    public static ArrayList<Buku> cariPenulis(String penulis) {
+        if (daftarBuku.isEmpty()) {
+            pager.info("Perpustakaan masih belum memiliki buku");
+            return null;
+        }
+
+        ArrayList<Buku> result = new ArrayList<>();
+        try {
+            for (Buku i : daftarBuku) {
+                if (i.getPenulis().toLowerCase().contains(penulis.toLowerCase())) {
+                    result.add(i);
+                }
+            }
+            if (result.size() == 0) {
+                throw new BukuTidakDitemukanException("Buku dengan penulis " + penulis + " tidak ditemukan");
+            }
+        } catch (BukuTidakDitemukanException e) {
+            pager.info(e.getMessage());
+            return null;
+        }
+        return result;
     }
 }

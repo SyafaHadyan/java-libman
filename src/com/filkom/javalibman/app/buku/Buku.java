@@ -4,6 +4,7 @@ import java.net.URL;
 import java.net.MalformedURLException;
 import java.time.LocalDate;
 import java.util.UUID;
+import java.util.ArrayList;
 
 import library.Pager;
 
@@ -42,7 +43,7 @@ public class Buku {
     }
 
     private static void parseInfoBukuToPager(Buku buku, int count) {
-        pager.info(new String[] { "Buku ke-" + count++, "", "Judul: " + buku.getJudul(),
+        pager.info(new String[] { "Buku ke-" + count, "", "Judul: " + buku.getJudul(),
                 "Penulis: " + buku.getPenulis(), "Username Peminjam: " + buku.getUsernamePeminjam(),
                 "Nama Peminjam: " + buku.getNamaPeminjam(), "Tersedia: " + buku.getStatus(),
                 "ID Buku: " + buku.getIDBuku(), "Cover Buku: " + buku.getCoverBuku(),
@@ -114,7 +115,16 @@ public class Buku {
     }
 
     public static void displayInfoBuku(Buku buku, int count) {
-        parseInfoBukuToPager(buku, count);
+        for (int i = 0; i < count; i++) {
+            parseInfoBukuToPager(buku, i);
+        }
+    }
+
+    public static void displayInfoBuku(ArrayList<Buku> buku) {
+        int count = 0;
+        for (Buku i : buku) {
+            parseInfoBukuToPager(i, count++);
+        }
     }
 
     public static void displayInfoBuku(Buku buku) {

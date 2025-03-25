@@ -3,8 +3,8 @@ import java.net.MalformedURLException;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.UUID;
-
 import java.util.Scanner;
+import java.util.ArrayList;
 
 import library.Pager;
 import app.buku.Buku;
@@ -130,7 +130,43 @@ public class AppRun {
                 Buku buku = perpustakaan.infoBuku(UUID.fromString(pager.customInput("ID Buku", true)));
                 pager.footer();
             } else if (userInputOption.equals("7")) {
-                // TODO: Cari Buku
+                while (true) {
+                    pager.header("Cari Buku");
+                    pager.message("(0) Cari berdasarkan ID buku");
+                    pager.message("(1) Cari berdasarkan judul buku");
+                    pager.message("(2) Cari berdasarkan penulis buku");
+                    pager.message("(3) Kembali ke menu utama");
+                    pager.spacer();
+
+                    userInputOption = null;
+                    userInputOption = pager.input();
+                    if (userInputOption.equals("0")) {
+                        Buku buku = Perpustakaan.cariIDBuku(UUID.fromString(pager.customInput("ID buku", true)));
+                        if (buku == null) {
+                            break;
+                        }
+                        Buku.displayInfoBuku(buku);
+                        break;
+                    } else if (userInputOption.equals("1")) {
+                        ArrayList<Buku> buku = Perpustakaan.cariJudulBuku(pager.customInput("Judul buku", true));
+                        if (buku == null) {
+                            break;
+                        }
+                        Buku.displayInfoBuku(buku);
+                        break;
+                    } else if (userInputOption.equals("2")) {
+                        ArrayList<Buku> buku = Perpustakaan.cariPenulis(pager.customInput("Penulis buku", true));
+                        if (buku == null) {
+                            break;
+                        }
+                        Buku.displayInfoBuku(buku);
+                        break;
+                    } else if (userInputOption.equals("3")) {
+                        break;
+                    } else {
+                        pager.info("invalid input");
+                    }
+                }
             } else if (loggedIn && userInputOption.equals("8")) {
                 pager.info(new String[] { "Nama: " + anggota.getNama(), "Username: " + anggota.getUsername(),
                         "Password: " + anggota.getPassword() });

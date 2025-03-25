@@ -13,7 +13,7 @@ public class Pager {
     private Scanner scanner;
 
     public Pager() {
-        this.pageWidth = 50;
+        this.pageWidth = 75;
         this.defaultSpaceBefore = 2;
         this.horizontalBar = '-';
         this.verticalBar = '|';
@@ -161,7 +161,7 @@ public class Pager {
             message(i);
         }
         spacer();
-        message("Press any key to continue");
+        message("Press enter to continue");
         spacer();
         input();
         footer();
