@@ -1,12 +1,14 @@
-package app.buku;
+package com.filkom.javalibman.app.buku;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.MalformedURLException;
 import java.time.LocalDate;
 import java.util.UUID;
 import java.util.ArrayList;
 
-import library.Pager;
+import com.filkom.javalibman.library.Pager;
 
 public class Buku {
     private String judul;
@@ -20,14 +22,20 @@ public class Buku {
 
     static Pager pager = new Pager();
 
-    public Buku() throws MalformedURLException {
+    public Buku() {
         this.judul = "Operating System Concepts, 10th Edition";
         this.penulis = "Abraham Silberschatz";
         this.usernamePeminjam = null;
         this.namaPeminjam = "Full Person Name";
         this.status = true;
         this.IDBuku = UUID.randomUUID();
-        this.coverBuku = new URL("https://codex.cs.yale.edu/avi/os-book/OS10/images/os10-cover.jpg");
+        try {
+            this.coverBuku = new URI("https://codex.cs.yale.edu/avi/os-book/OS10/images/os10-cover.jpg").toURL();
+        } catch (URISyntaxException e) {
+            //
+        } catch (MalformedURLException f) {
+            //
+        }
         this.tanggalTerbit = LocalDate.of(2000, 01, 01);
     }
 

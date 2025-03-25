@@ -1,23 +1,27 @@
-package app.perpustakaan;
+package com.filkom.javalibman.app.perpustakaan;
 
 import java.util.UUID;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import library.Pager;
-import app.buku.Buku;
-import app.anggota.Anggota;
-import exception.BukuTidakDipinjamException;
-import exception.BukuTidakDitemukanException;
-import exception.AnggotaTidakDitemukanException;
-import exception.BukuTidakTersediaException;
+import com.filkom.javalibman.library.Pager;
+import com.filkom.javalibman.app.buku.Buku;
+import com.filkom.javalibman.app.anggota.Anggota;
+import com.filkom.javalibman.exception.BukuTidakDipinjamException;
+import com.filkom.javalibman.exception.BukuTidakDitemukanException;
+import com.filkom.javalibman.exception.AnggotaTidakDitemukanException;
+import com.filkom.javalibman.exception.BukuTidakTersediaException;
 
 public class Perpustakaan {
     private static ArrayList<Buku> daftarBuku = new ArrayList<>();
     private static HashMap<String, ArrayList<String>> daftarAnggota = new HashMap<>();
 
     static Pager pager = new Pager();
+
+    private static String getNamaFromUsername(String username) {
+        return daftarAnggota.get(username).get(0);
+    }
 
     public void tambahBuku(Buku buku) {
         daftarBuku.add(buku);
@@ -52,6 +56,7 @@ public class Perpustakaan {
     public static void pinjamBuku(String usernameAnggota, UUID IDBuku) {
         if (daftarBuku.isEmpty()) {
             pager.info("Perpustakaan masih belum memiliki buku");
+            return;
         }
 
         int index = 0;
@@ -63,6 +68,8 @@ public class Perpustakaan {
                     }
 
                     i.setStatus(false);
+                    i.setUsernamePeminjam(usernameAnggota);
+                    i.setNamaPeminjam(getNamaFromUsername(usernameAnggota));
                     daftarBuku.set(index++, i);
                     return;
                 }
@@ -79,6 +86,7 @@ public class Perpustakaan {
     public static void kembaliBuku(String usernameAnggota, UUID IDBuku) {
         if (daftarBuku.isEmpty()) {
             pager.info("Perpustakaan masih belum memiliki buku");
+            return;
         }
 
         int index = 0;
@@ -89,7 +97,13 @@ public class Perpustakaan {
                         throw new BukuTidakDipinjamException("Buku dengan ID " + IDBuku + " tidak dipinjam");
                     }
 
+                    if (!i.getUsernamePeminjam().equals(usernameAnggota)) {
+                        throw new BukuTidakDipinjamException("Buku dengan ID " + IDBuku + " tidak dipinjam");
+                    }
+
                     i.setStatus(true);
+                    i.setUsernamePeminjam(null);
+                    i.setNamaPeminjam(null);
                     daftarBuku.set(index, i);
                     return;
                 }

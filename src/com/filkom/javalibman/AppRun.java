@@ -1,19 +1,23 @@
-import java.net.URL;
+package com.filkom.javalibman;
+
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.UUID;
 import java.util.Scanner;
 import java.util.ArrayList;
 
-import library.Pager;
-import app.buku.Buku;
-import app.anggota.Anggota;
-import app.perpustakaan.Perpustakaan;
+import com.filkom.javalibman.library.Pager;
+import com.filkom.javalibman.app.buku.Buku;
+import com.filkom.javalibman.app.anggota.Anggota;
+import com.filkom.javalibman.app.perpustakaan.Perpustakaan;
 
 public class AppRun {
 
-    public static void main(String[] args) throws MalformedURLException {
+    public static void main(String[] args) {
         final String VERSION = "v1.0.0";
 
         Scanner scanner = new Scanner(System.in);
@@ -57,7 +61,7 @@ public class AppRun {
             pager.footer();
 
             if (!loggedIn && userInputOption.equals("0")) {
-                pager.header("anggota User Baru");
+                pager.header("Register User Baru");
                 boolean registerConfirm = anggota.register(pager.customInput("Nama", true),
                         pager.customInput("Username", true),
                         pager.customInput("Password", true));
@@ -82,9 +86,24 @@ public class AppRun {
                 }
             } else if (userInputOption.equals("2")) {
                 pager.header("Pinjam Buku");
-                Anggota.pinjamBuku(username, UUID.fromString(pager.customInput("ID Buku", true)));
+                try {
+                    UUID IDBuku = UUID.fromString(pager.customInput("ID Buku", true));
+                    pager.footer();
+                    Anggota.pinjamBuku(username, IDBuku);
+                } catch (IllegalArgumentException e) {
+                    pager.footer();
+                    pager.info("ID buku tidak valid");
+                }
             } else if (userInputOption.equals("3")) {
-                Anggota.kembaliBuku(username, UUID.fromString(pager.customInput("ID Buku", true)));
+                pager.header("Kembalikan Buku");
+                try {
+                    UUID IDBuku = UUID.fromString(pager.customInput("ID Buku", true));
+                    pager.footer();
+                    Anggota.kembaliBuku(username, IDBuku);
+                } catch (IllegalArgumentException e) {
+                    pager.footer();
+                    pager.info("ID buku tidak valid");
+                }
             } else if (userInputOption.equals("4")) {
                 pager.header("Tambah Buku");
 
@@ -94,9 +113,13 @@ public class AppRun {
 
                 while (true) {
                     try {
-                        coverBuku = new URL(pager.customInput("Cover Buku (url)", true));
+                        coverBuku = new URI(pager.customInput("Cover Buku (url)", true)).toURL();
                         break;
-                    } catch (MalformedURLException e) {
+                    } catch (URISyntaxException e) {
+                        pager.message("invalid url");
+                    } catch (MalformedURLException f) {
+                        pager.message("invalid url");
+                    } catch (IllegalArgumentException g) {
                         pager.message("invalid url");
                     }
                 }
@@ -127,8 +150,15 @@ public class AppRun {
                 perpustakaan.daftarBuku();
             } else if (userInputOption.equals("6")) {
                 pager.header("Info Buku");
-                Buku buku = perpustakaan.infoBuku(UUID.fromString(pager.customInput("ID Buku", true)));
-                pager.footer();
+                try {
+                    UUID IDBuku = UUID.fromString(pager.customInput("ID Buku", true));
+                    pager.footer();
+                    Buku buku = perpustakaan.infoBuku(IDBuku);
+                    Buku.displayInfoBuku(buku);
+                } catch (IllegalArgumentException e) {
+                    pager.footer();
+                    pager.info("ID buku tidak valid");
+                }
             } else if (userInputOption.equals("7")) {
                 while (true) {
                     pager.header("Cari Buku");
@@ -141,29 +171,40 @@ public class AppRun {
                     userInputOption = null;
                     userInputOption = pager.input();
                     if (userInputOption.equals("0")) {
-                        Buku buku = Perpustakaan.cariIDBuku(UUID.fromString(pager.customInput("ID buku", true)));
+                        Buku buku;
+                        while (true) {
+                            try {
+                                UUID IDBuku = UUID.fromString(pager.customInput("ID buku", true));
+                                pager.footer();
+                                buku = Perpustakaan.cariIDBuku(IDBuku);
+                                break;
+                            } catch (IllegalArgumentException e) {
+                                pager.info("ID buku tidak valid");
+                            }
+                        }
                         if (buku == null) {
                             break;
                         }
                         Buku.displayInfoBuku(buku);
                         break;
                     } else if (userInputOption.equals("1")) {
-                        ArrayList<Buku> buku = Perpustakaan.cariJudulBuku(pager.customInput("Judul buku", true));
-                        if (buku == null) {
-                            break;
+                        String judulBuku = pager.customInput("Judul buku", true);
+                        pager.footer();
+                        ArrayList<Buku> buku = Perpustakaan.cariJudulBuku(judulBuku);
+                        if (buku != null) {
+                            Buku.displayInfoBuku(buku);
                         }
-                        Buku.displayInfoBuku(buku);
-                        break;
                     } else if (userInputOption.equals("2")) {
-                        ArrayList<Buku> buku = Perpustakaan.cariPenulis(pager.customInput("Penulis buku", true));
-                        if (buku == null) {
-                            break;
+                        String penulis = pager.customInput("Penulis buku", true);
+                        pager.footer();
+                        ArrayList<Buku> buku = Perpustakaan.cariPenulis(penulis);
+                        if (buku != null) {
+                            Buku.displayInfoBuku(buku);
                         }
-                        Buku.displayInfoBuku(buku);
-                        break;
                     } else if (userInputOption.equals("3")) {
                         break;
                     } else {
+                        pager.footer();
                         pager.info("invalid input");
                     }
                 }
