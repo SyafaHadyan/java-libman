@@ -179,7 +179,7 @@ public class AppRun {
                                 buku = Perpustakaan.cariIDBuku(IDBuku);
                                 break;
                             } catch (IllegalArgumentException e) {
-                                pager.info("ID buku tidak valid");
+                                pager.message("ID buku tidak valid");
                             }
                         }
                         if (buku == null) {
@@ -202,6 +202,7 @@ public class AppRun {
                             Buku.displayInfoBuku(buku);
                         }
                     } else if (userInputOption.equals("3")) {
+                        pager.footer();
                         break;
                     } else {
                         pager.footer();

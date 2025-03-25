@@ -34,9 +34,7 @@ public class Perpustakaan {
             pager.info("Perpustakaan masih belum memiliki buku");
         } else {
             int count = 1;
-            for (Buku i : daftarBuku) {
-                Buku.displayInfoBuku(i, count++);
-            }
+            Buku.displayInfoBuku(daftarBuku);
         }
     }
 
